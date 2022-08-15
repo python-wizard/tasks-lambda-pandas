@@ -10,7 +10,7 @@ path_data = '.' + os.sep + 'data' + os.sep
 file_ = path_data + 'pass.txt'
 with open(file_, encoding='utf-8') as f:
    password = f.readline()
-print('password imported')
+print('password extracted from file : ', file_)
 
 # opening password protected 7z file using py7zr library
 file_ = path_data + 'books_data.7z'
