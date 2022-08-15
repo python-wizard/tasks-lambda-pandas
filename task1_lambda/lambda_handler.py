@@ -128,8 +128,9 @@ def lambda_handler(event, context):
     # print(len(body))
 
     # Using regex I'm matching all 'digit collections' to find integers. I treat '.' as the separator as that seems to
+    # as negative integers are also integers they are also matched
     # be the case looking at the example input/output
-    numbers = re.findall('\d+', body)
+    numbers = re.findall('-?\d+', body)
 
     str_csv = fibonacci_process(numbers)
     # print(str_csv)

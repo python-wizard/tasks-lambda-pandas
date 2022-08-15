@@ -13,8 +13,8 @@ with open(file_, encoding='utf-8') as f:
 
 # opening password protected 7z file using py7zr library
 file_ = path_data + 'books_data.7z'
-with py7zr.SevenZipFile(file_, mode='r', password=password) as z:
-    z.extractall(path=path_data)
+with py7zr.SevenZipFile(file_, mode='r', password=password) as f:
+    f.extractall(path=path_data)
 
 # searching for all *.csv files should be only one
 csv_files = glob(f'{path_data}*.csv')
@@ -32,7 +32,7 @@ file_ = path_data + book_file
 # df = pd.read_csv(f, sep=',(?=\s{2})|,(?=[\w\"\'¡\$¿])', engine='python')
 
 # streamlined regex pattern
-# importing csv using pandas, keeping isbn13 column as string (so that 0's aren't truncated)
+# importing csv using pandas, keeping isbn13 column as string (so that 0s aren't truncated)
 df = pd.read_csv(file_, sep=',(?=\s{2})|,(?=[^ ])', dtype={'ISBń13': object}, engine='python')
 
 # extracting columns from df and processing them using map
@@ -87,11 +87,11 @@ df_top_50 = df_top_50.nlargest(50, 'average_rating')
 
 # file directory and Excel sheet name setting
 path_ = '.' + os.sep + 'data' + os.sep + 'transformed' + os.sep
-f = path_ + book_file[:-4] + '.xlsx'
+file_ = path_ + book_file[:-4] + '.xlsx'
 task_name = "Top 50 books"
 
 # exporting as new file with a specific sheet name - not adding a new sheet to a file
-df_top_50.to_excel(f, sheet_name=task_name)
+df_top_50.to_excel(file_, sheet_name=task_name)
 
 
 # Task 5b) "Best books before 2000s"
@@ -115,7 +115,7 @@ del df_best_bef_2000['isbn13']
 task_name ='Best books before 2000s'
 
 # appending the df as new sheet to an existing Excel sheet
-with pd.ExcelWriter(f, mode='a') as writer:
+with pd.ExcelWriter(file_, mode='a') as writer:
     df_best_bef_2000.to_excel(writer, sheet_name=task_name)
 
 
@@ -141,7 +141,7 @@ del df_university['isbn13']
 task_name = 'University Published'
 
 # appending the df as new sheet to an existing Excel sheet
-with pd.ExcelWriter(f, mode='a') as writer:
+with pd.ExcelWriter(file_, mode='a') as writer:
     df_university.to_excel(writer, sheet_name=task_name)
 
 
@@ -160,7 +160,7 @@ df_short_stories = df_short_stories.nlargest(50, 'average_rating')
 task_name = "Best short stories"
 
 # appending the df as new sheet to an existing Excel sheet
-with pd.ExcelWriter(f, mode='a') as writer:
+with pd.ExcelWriter(file_, mode='a') as writer:
     df_short_stories.to_excel(writer, sheet_name=task_name)
 
 # 5e) "Most popular author"
@@ -180,5 +180,5 @@ df_popular_author = df_popular_author.sort_values('average_rating', ascending=Fa
 task_name = "Most popular author"
 
 # appending the df as new sheet to an existing Excel sheet
-with pd.ExcelWriter(f, mode='a') as writer:
+with pd.ExcelWriter(file_, mode='a') as writer:
     df_popular_author.to_excel(writer, sheet_name=task_name)
