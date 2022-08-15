@@ -10,11 +10,13 @@ path_data = '.' + os.sep + 'data' + os.sep
 file_ = path_data + 'pass.txt'
 with open(file_, encoding='utf-8') as f:
    password = f.readline()
+print('password imported')
 
 # opening password protected 7z file using py7zr library
 file_ = path_data + 'books_data.7z'
 with py7zr.SevenZipFile(file_, mode='r', password=password) as f:
     f.extractall(path=path_data)
+print(file_, ' extracted')
 
 # searching for all *.csv files should be only one
 csv_files = glob(f'{path_data}*.csv')
@@ -34,6 +36,7 @@ file_ = path_data + book_file
 # streamlined regex pattern
 # importing csv using pandas, keeping isbn13 column as string (so that 0s aren't truncated)
 df = pd.read_csv(file_, sep=',(?=\s{2})|,(?=[^ ])', dtype={'ISBń13': object}, engine='python')
+print(file_, ' imported to pandas')
 
 # extracting columns from df and processing them using map
 new_columns = df.columns
@@ -72,6 +75,7 @@ if path_transformed not in list_dirs:
 
 # exporting to parquet format, requires pyarrow or fastparquet
 df.to_parquet(file_)
+print(f'Exported DataFrame to parquet file: {file_}')
 
 # Task 5a) "Top 50 books"
 
@@ -92,7 +96,7 @@ task_name = "Top 50 books"
 
 # exporting as new file with a specific sheet name - not adding a new sheet to a file
 df_top_50.to_excel(file_, sheet_name=task_name)
-
+print(f'Exported DataFrame as file: \'{file_}\' within \'{task_name}\' sheet.')
 
 # Task 5b) "Best books before 2000s"
 
@@ -117,7 +121,7 @@ task_name ='Best books before 2000s'
 # appending the df as new sheet to an existing Excel sheet
 with pd.ExcelWriter(file_, mode='a') as writer:
     df_best_bef_2000.to_excel(writer, sheet_name=task_name)
-
+print(f'Exported DataFrame to new sheet: \'{task_name}\' within existing file: \'{file_}\' file.')
 
 # Task 5c) "University Published"
 
@@ -143,7 +147,7 @@ task_name = 'University Published'
 # appending the df as new sheet to an existing Excel sheet
 with pd.ExcelWriter(file_, mode='a') as writer:
     df_university.to_excel(writer, sheet_name=task_name)
-
+print(f'Exported DataFrame to new sheet: \'{task_name}\' within existing file: \'{file_}\' file.')
 
 # Task 5d) "Best short stories"
 # applying a one line two condition mask where number of pages is below 100 and amount of ratings is above 1000
@@ -162,6 +166,7 @@ task_name = "Best short stories"
 # appending the df as new sheet to an existing Excel sheet
 with pd.ExcelWriter(file_, mode='a') as writer:
     df_short_stories.to_excel(writer, sheet_name=task_name)
+print(f'Exported DataFrame to new sheet: \'{task_name}\' within existing file: \'{file_}\' file.')
 
 # 5e) "Most popular author"
 # chaining: group by authors, sum by amount of ratings
@@ -182,3 +187,6 @@ task_name = "Most popular author"
 # appending the df as new sheet to an existing Excel sheet
 with pd.ExcelWriter(file_, mode='a') as writer:
     df_popular_author.to_excel(writer, sheet_name=task_name)
+print(f'Exported DataFrame to new sheet: \'{task_name}\' within existing file: \'{file_}\' file.')
+
+print('\nSuccess, all processes finished.')
